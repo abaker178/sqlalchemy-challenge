@@ -1,3 +1,28 @@
+##################################################################################
+## SQL and database prep
+
+# Python SQL toolkit and Object Relational Mapper
+import sqlalchemy
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, func
+import os
+
+# Engine to hawaii.sqlite
+path = os.path.join("Resources", "hawaii.sqlite")
+engine = create_engine(f"sqlite:///{path}")
+
+# Reflect an existing database into a new model
+Base = automap_base()
+Base.prepare(engine, reflect=True)
+
+# Save references to each table
+Measurement = Base.classes.measurement
+Station = Base.classes.station
+
+##################################################################################
+
+# Flask to host the API
 from flask import Flask, jsonify
 
 app = Flask(__name__)
@@ -7,32 +32,36 @@ app = Flask(__name__)
 ################
 @app.route("/")
 def home():
-    menu = "<div><b>Options</b></div>\
-        <p><a href='/api/v1.0/precipitation'>Precipitation Data</p>\
-        <p><a href='/api/v1.0/station'>Station Data</p>\
-        <p><a href='/api/v1.0/tobs'>Temperature Data</p>\
-        <p><a href='/api/v1.0/daterange'>Date Range</p>"
-    return menu
+    body = "<div><b>Options</b></div>\
+        <ul>\
+            <li><a href='/api/v1.0/precipitation'>Precipitation Data</li>\
+            <li><a href='/api/v1.0/station'>Station Data</li>\
+            <li><a href='/api/v1.0/tobs'>Temperature Data</li>\
+            <li>Date Range: substitute a starting date and an optional ending date into the following link\
+                <li>/api/v1.0/<start>/<end><\li>\
+            </li>\
+        </ul>"
+    return body
 
 @app.route("/api/v1.0/precipitation")
 def precip():
-    pass
+    session = Session(engine)
+    session.close()
 
 @app.route("/api/v1.0/stations")
 def station():
-    pass
+    session = Session(engine)
+    session.close()
 
 @app.route("/api/v1.0/tobs")
 def temp():
-    pass
-
-@app.route("/api/v1.0/daterange")
-def range():
-    pass
+    session = Session(engine)
+    session.close()
 
 @app.route("/api/v1.0/<start>/<end>")
-def range():
-    pass
+def rangedata():
+    session = Session(engine)
+    session.close()
 
 ################
 ## END ROUTES ##
